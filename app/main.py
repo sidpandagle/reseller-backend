@@ -30,6 +30,9 @@ origins = [
     "https://www.congruencemarketinsights.com",
     "https://congruencemarketinsights.com",
     "https://reseller-market-research-production.up.railway.app",
+    "https://www.reseller-market-research-production.up.railway.app",
+    "https://reseller-market-research-admin-production.up.railway.app",
+    "https://www.reseller-market-research-admin-production.up.railway.app",
 ]
 
 app.add_middleware(
