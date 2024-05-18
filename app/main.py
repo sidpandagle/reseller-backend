@@ -29,6 +29,7 @@ origins = [
     "https://congruence.178765.xyz",
     "https://www.congruencemarketinsights.com",
     "https://congruencemarketinsights.com",
+    "https://reseller-market-research-production.up.railway.app",
 ]
 
 app.add_middleware(
