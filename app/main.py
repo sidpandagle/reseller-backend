@@ -28,6 +28,8 @@ origins = [
     "http://localhost:3000",
     "http://congruence.178765.xyz",
     "https://congruence.178765.xyz",
+    "http://reseller.178765.xyz",
+    "https://reseller.178765.xyz",
     "https://www.congruencemarketinsights.com",
     "https://congruencemarketinsights.com",
     "https://reseller-market-research-production.up.railway.app",
