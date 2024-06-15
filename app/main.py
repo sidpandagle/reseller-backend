@@ -36,6 +36,8 @@ origins = [
     "https://www.reseller-market-research-production.up.railway.app",
     "https://reseller-market-research-admin-production.up.railway.app",
     "https://www.reseller-market-research-admin-production.up.railway.app",
+    "https://researchenvision.com",
+    "https://www.researchenvision.com",
 ]
 
 app.add_middleware(
