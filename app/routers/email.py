@@ -63,7 +63,8 @@ async def email(email_request: EmailRequest):
             msg.attach(MIMEText(html_message, "html"))
 
             # Create an SMTP server connection
-            with smtplib.SMTP_SSL("smtpout.secureserver.net", 465) as server:
+            with smtplib.SMTP("smtpout.secureserver.net", 587) as server:
+                server.starttls()
                 server.login("sales@researchenvision.com", smtp_pass)
                 server.sendmail(
                     "sales@researchenvision.com", recipients, msg.as_string()
