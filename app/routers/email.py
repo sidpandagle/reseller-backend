@@ -14,10 +14,8 @@ from slowapi.util import get_remote_address
 
 from ..utils.rate_limit import limiter
 
-from fastapi import BackgroundTasks
-
 # smtp_pass = os.environ["SIDSMTP"]
-smtp_pass = os.environ["RESMTPPASS"]
+smtp_pass = os.environ["CONGSMTP"]
 recaptcha_secret = os.environ["RECAPTCHA_SECRET_KEY"]
 
 
@@ -39,7 +37,7 @@ def email_check(request: Request):
     return {'ip':request.client.host}
 
 @router.post("/email")
-async def email(email_request: EmailRequest, background_tasks: BackgroundTasks):
+async def email(email_request: EmailRequest):
     try:
         if not email_request.response_token:
             return RecaptchaResponse(success=False, message='reCAPTCHA not completed.')
@@ -52,31 +50,29 @@ async def email(email_request: EmailRequest, background_tasks: BackgroundTasks):
         response = requests.post(verification_url, data=payload)
 
         if response.json()['success']:
-        # if True:
-            background_tasks.add_task(send_email_in_background, email_request)
+            # Create a message
+            msg = MIMEMultipart()
+            msg["From"] = "Research Envision Sales <sales@congruencemarketinsights.com>"
+            msg["To"] = "sales@researchenvision.com"
+            recipients = ["sales@researchenvision.com"]
+            
+            msg["Subject"] = email_request.subject
+
+            # Add the HTML message body
+            html_message = email_request.content
+            msg.attach(MIMEText(html_message, "html"))
+
+            # Create an SMTP server connection
+            with smtplib.SMTP("smtp.gmail.com", 587) as server:
+                server.starttls()
+                server.login("sales@congruencemarketinsights.com", smtp_pass)
+                server.sendmail(
+                    "Research Envision Sales", recipients, msg.as_string()
+                )
+
             return {"message": "Email sent successfully"}
         else:
             return RecaptchaResponse(success=False, message='reCAPTCHA verification failed.')
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
-def send_email_in_background(email_request: EmailRequest):
-    msg = MIMEMultipart()
-    msg["From"] = "sales@researchenvision.com"
-    msg["To"] = "sales@researchenvision.com"
-    recipients = ["sales@researchenvision.com"]
-    
-    msg["Subject"] = email_request.subject
-
-    # Add the HTML message body
-    html_message = email_request.content
-    msg.attach(MIMEText(html_message, "html"))
-
-    # Create an SMTP server connection
-    with smtplib.SMTP("smtpout.secureserver.net", 587) as server:
-        server.starttls()
-        server.login("sales@researchenvision.com", smtp_pass)
-        server.sendmail(
-            "sales@researchenvision.com", recipients, msg.as_string()
-        )
