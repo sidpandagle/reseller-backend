@@ -462,6 +462,22 @@ async def create_report(report: CreateReportWithImages, db: Session = Depends(ge
 
     return {"data": "Report Added Successfully"}
 
+@router.post("/bulk")
+async def bulk_create_report(reports: list[CreateReportWithImages], db: Session = Depends(get_db)):
+    for report in reports:
+        db_report = Report(**report.report.dict())
+        db.add(db_report)
+        db.commit()
+        db.refresh(db_report)
+
+        for image in report.images:
+            image.img_name = image.img_name.replace("XXX", str(db_report.id))
+            new_image = ReportImage(**image.dict())
+            db.add(new_image)
+            db.commit()
+            db.refresh(new_image)
+
+    return {"data": "Report Added Successfully"}
 
 @router.put("/{report_id}")
 async def update_report(new_report: UpdateReport, db: Session = Depends(get_db)):

@@ -51,9 +51,10 @@ async def email(email_request: EmailRequest, background_tasks: BackgroundTasks):
         }
         response = requests.post(verification_url, data=payload)
 
-        if response.json()['success']:
-        # if True:
-            background_tasks.add_task(send_email_in_background, email_request)
+        # if response.json()['success']:
+        if True:
+            send_email_in_background(email_request)
+            # background_tasks.add_task(send_email_in_background, email_request)
             return {"message": "Email sent successfully"}
         else:
             return RecaptchaResponse(success=False, message='reCAPTCHA verification failed.')
@@ -74,7 +75,7 @@ def send_email_in_background(email_request: EmailRequest):
     msg.attach(MIMEText(html_message, "html"))
 
     # Create an SMTP server connection
-    with smtplib.SMTP("smtpout.secureserver.net", 587) as server:
+    with smtplib.SMTP("smtpout.secureserver.net", 80) as server:
         server.starttls()
         server.login("sales@researchenvision.com", smtp_pass)
         server.sendmail(

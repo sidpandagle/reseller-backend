@@ -8,34 +8,40 @@ import os
 
 router = APIRouter()
 
-
-# class GetPrice(BaseModel):
-#     id: int
-#     license: str
-#     price: str
-
-
 # class CreatePriceRequest(BaseModel):
 #     license: str
 #     price: str
 
 
-# class UpdatePriceRequest(BaseModel):
-#     id: int
-#     license: str
-#     price: str
+class CreateCategoryRequest(BaseModel):
+    abr: str
+    name: str
+    url: str
+    icon: str
+    back_cover: str
+    meta_title: str
+    meta_desc: str
+    meta_keyword: str
 
-
-
-# @router.post("/")
-# async def create_price(
-#     price: CreatePriceRequest, db: Session = Depends(get_db)
-# ):
-#     db_price = Price(**price.dict())
-#     db.add(db_price)
-#     db.commit()
-#     db.refresh(db_price)
-#     return {"data": db_price}
+@router.post("/")
+async def create_category(
+    category: CreateCategoryRequest, db: Session = Depends(get_db)
+):
+    db_category = category(**category.dict())
+    db.add(db_category)
+    db.commit()
+    db.refresh(db_category)
+    return {"data": db_category}
+@router.post("/bulk")
+async def create_category_bulk(
+    categories: list[CreateCategoryRequest], db: Session = Depends(get_db)
+):
+    for category in categories:
+        db_category = Category(**category.dict())
+        db.add(db_category)
+        db.commit()
+        db.refresh(db_category)
+    return {"data": db_category}
 
 
 @router.get("/")
