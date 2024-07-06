@@ -1,7 +1,7 @@
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import smtplib
-from fastapi import FastAPI, APIRouter, HTTPException, Request
+from fastapi import BackgroundTasks, FastAPI, APIRouter, HTTPException, Request
 import os
 import requests
 
@@ -14,9 +14,6 @@ from slowapi.util import get_remote_address
 
 from ..utils.rate_limit import limiter
 
-from fastapi import BackgroundTasks
-
-# smtp_pass = os.environ["SIDSMTP"]
 smtp_pass = os.environ["RESMTPPASS"]
 recaptcha_secret = os.environ["RECAPTCHA_SECRET_KEY"]
 
@@ -51,10 +48,8 @@ async def email(email_request: EmailRequest, background_tasks: BackgroundTasks):
         }
         response = requests.post(verification_url, data=payload)
 
-        # if response.json()['success']:
-        if True:
-            send_email_in_background(email_request)
-            # background_tasks.add_task(send_email_in_background, email_request)
+        if response.json()['success']:
+            background_tasks.add_task(send_email_in_background, email_request)
             return {"message": "Email sent successfully"}
         else:
             return RecaptchaResponse(success=False, message='reCAPTCHA verification failed.')
