@@ -9,6 +9,8 @@ import os
 import io
 from datetime import datetime
 from PIL import Image
+import pandas as pd
+import json
 
 from app.routers.report_image import CreateReportImageRequest, UpdateReportImageRequest
 
@@ -503,6 +505,47 @@ async def delete_report(report_id: int, db: Session = Depends(get_db)):
     db.delete(report)
     db.commit()
     return {"message": "Report deleted"}
+
+@router.post("/generate-payload-from-excel")
+async def convert_excel_to_json(file: UploadFile = File(...)):
+    try:
+        if not file.content_type.lower() in (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "application/vnd.ms-excel",
+        ):
+            raise ValueError("Invalid file format. Please upload an Excel file (.xlsx or .xls).")
+
+        data = pd.read_excel(file.file, sheet_name=None) 
+        
+        # For Multiple Sheets
+        # json_data = {}
+        # for sheet_name, sheet_data in data.items():
+        #     json_data[sheet_name] = json.loads(sheet_data.to_json(orient="records"))
+        
+        # For Single Sheet
+        json_data = {}
+        for sheet_name, sheet_data in data.items():
+            json_data = json.loads(sheet_data.to_json(orient="records"))
+        for i, jdata in enumerate(json_data):
+            # json_data[i]['url'] = '-'.join(json_data[i]['title'].lower().split('Market')[0].strip().split(' '))
+            json_data[i]['url'] = (json_data[i]['title'].lower().split('market')[0] + 'market').replace('global ', '').split(' ')
+            json_data[i]['url'] = '-'.join(json_data[i]['url'])
+            json_data[i]['created_date'] = datetime.fromtimestamp(json_data[i]['created_date'] / 1000.0).strftime("%Y/%m/%d")
+            if jdata['description'] is not None:
+                json_data[i]['summary'] = jdata['description'].split('\n')[0]
+                json_data[i]['meta_desc'] = jdata['description'].split('\n')[0]
+        
+        payload = {}
+        payload['report'] = json_data
+        payload['images'] = []
+        return payload
+
+    except ValueError as e:
+        return {"error": str(e)}  # Handle file format errors
+
+    except Exception as e:
+        error_dict = {"error": str(e)}
+        return json.dumps(error_dict)
 
 
 @router.post("/upload")
