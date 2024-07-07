@@ -517,6 +517,262 @@ async def convert_excel_to_json(file: UploadFile = File(...)):
 
         data = pd.read_excel(file.file, sheet_name=None) 
         
+        category_list = [
+            {
+            "id": 6,
+            "abr": "ADV",
+            "url": "advanced-materials",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Advanced Material",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 22,
+            "abr": "AGR",
+            "url": "agriculture",
+            "back_cover": None,
+            "meta_desc": None,
+            "icon": None,
+            "name": "Agriculture",
+            "meta_title": None,
+            "meta_keyword": None
+            },
+            {
+            "id": 1,
+            "abr": "ANA",
+            "url": "analytics",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Analytics",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 17,
+            "abr": "ARC",
+            "url": "architecture",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Architecture",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 21,
+            "abr": "AUT",
+            "url": "automobile-and-transportation",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Automobile & Transportation",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 19,
+            "abr": "BIO",
+            "url": "biotechnology",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Biotechnology",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 15,
+            "abr": "BLD",
+            "url": "building-materials",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Building Materials",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 4,
+            "abr": "CHE",
+            "url": "chemicals",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Chemicals & Materials",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 10,
+            "abr": "COM",
+            "url": "commercial-aviation",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Commercial Aviation",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 12,
+            "abr": "CGS",
+            "url": "consumer-goods",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Consumer Goods",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 18,
+            "abr": "CNV",
+            "url": "convenience-food",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Convenience Food",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 7,
+            "abr": "EAS",
+            "url": "electronics-and-semiconductors",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Electronics & Semiconductors",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 14,
+            "abr": "EAP",
+            "url": "energy-and-power",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Energy & Power",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 13,
+            "abr": "FAN",
+            "url": "feed-and-animal-nutrition",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Feed and Animal Nutrition",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 23,
+            "abr": "FAB",
+            "url": "food-and-beverages",
+            "back_cover": None,
+            "meta_desc": None,
+            "icon": None,
+            "name": "Food & Beverages",
+            "meta_title": None,
+            "meta_keyword": None
+            },
+            {
+            "id": 9,
+            "abr": "HAP",
+            "url": "household-appliances",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Household Appliances",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 20,
+            "abr": "IEQ",
+            "url": "industrial-equipment",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Industrial Equipment",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 16,
+            "abr": "IT",
+            "url": "information-technology",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Information Technology",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 2,
+            "abr": "MAE",
+            "url": "machinery-and-equipment",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Machinery & Equipment",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 11,
+            "abr": "MDEV",
+            "url": "medical-devices",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Medical Devices",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 24,
+            "abr": "PAK",
+            "url": "packaging",
+            "back_cover": None,
+            "meta_desc": None,
+            "icon": None,
+            "name": "Packaging",
+            "meta_title": None,
+            "meta_keyword": None
+            },
+            {
+            "id": 3,
+            "abr": "PHA",
+            "url": "pharmaceuticals",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Pharma & Healthcare",
+            "meta_title": "",
+            "meta_keyword": ""
+            },
+            {
+            "id": 5,
+            "abr": "SER",
+            "url": "services",
+            "back_cover": "",
+            "meta_desc": "",
+            "icon": "",
+            "name": "Services",
+            "meta_title": "",
+            "meta_keyword": ""
+            }
+        ]
+        
         # For Multiple Sheets
         # json_data = {}
         # for sheet_name, sheet_data in data.items():
@@ -524,20 +780,28 @@ async def convert_excel_to_json(file: UploadFile = File(...)):
         
         # For Single Sheet
         json_data = {}
+        payload:list[CreateReportWithImages] = []
         for sheet_name, sheet_data in data.items():
             json_data = json.loads(sheet_data.to_json(orient="records"))
         for i, jdata in enumerate(json_data):
-            # json_data[i]['url'] = '-'.join(json_data[i]['title'].lower().split('Market')[0].strip().split(' '))
+            report:CreateReportWithImages = {}
             json_data[i]['url'] = (json_data[i]['title'].lower().split('market')[0] + 'market').replace('global ', '').split(' ')
             json_data[i]['url'] = '-'.join(json_data[i]['url'])
+            json_data[i]['pages'] = str(json_data[i]['pages'])
             json_data[i]['created_date'] = datetime.fromtimestamp(json_data[i]['created_date'] / 1000.0).strftime("%Y/%m/%d")
             if jdata['description'] is not None:
                 json_data[i]['summary'] = jdata['description'].split('\n')[0]
                 json_data[i]['meta_desc'] = jdata['description'].split('\n')[0]
+            for j, cat in enumerate(category_list):
+                if json_data[i]['category_id'] == cat['name']: 
+                    json_data[i]['category_id'] = cat['id']
+            json_data[i]['faqs'] = ''
+            json_data[i]['cover_img'] = ''
+            json_data[i]['meta_keyword'] = ''
+            report['report'] = json_data[i]
+            report['images'] = []
+            payload.append(report)
         
-        payload = {}
-        payload['report'] = json_data
-        payload['images'] = []
         return payload
 
     except ValueError as e:
