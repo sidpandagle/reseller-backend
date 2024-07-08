@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import Depends, APIRouter, HTTPException, File, UploadFile
+from fastapi import Depends, APIRouter, HTTPException, File, Response,  UploadFile
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.models import Category, Report, ReportImage, Price
@@ -142,6 +142,40 @@ async def get_reports(db: Session = Depends(get_db)):
     ]
     return {"data": report_list}
 
+@router.get("/excel-report")
+async def get_reports_for_excel_(db: Session = Depends(get_db)):
+    reports = (
+        db.query(Report)
+        .join(Category, Report.category_id == Category.id)
+        .with_entities(
+            Report.id,
+            Report.url,
+            Category.name.label("category_name"),
+            Report.title,
+            Report.summary,
+            Report.pages,
+            Report.created_date,
+            Report.description,
+            Report.toc,
+            Report.highlights,
+    
+        )
+        .order_by(Report.id)
+        # .limit(5)
+        .all()
+    )
+    df = pd.DataFrame(reports)
+    
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+    
+    output.seek(0)
+    
+    headers = {
+        'Content-Disposition': 'attachment; filename="output.xlsx"'
+    }
+    return Response(content=output.read(), media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers)
 
 @router.get("/category/category_count")
 async def get_category_count(db: Session = Depends(get_db)):
