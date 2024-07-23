@@ -26,8 +26,6 @@ app.mount("/images", StaticFiles(directory="images"), name="images")
 origins = [
     "https://localhost:3000",
     "http://localhost:3000",
-    "http://congruence.178765.xyz",
-    "https://congruence.178765.xyz",
     "http://reseller.178765.xyz",
     "https://reseller.178765.xyz",
     "https://www.congruencemarketinsights.com",
